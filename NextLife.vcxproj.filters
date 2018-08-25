@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Projects\NextLifeClient\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\NextLifeClient\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Projects\NextLifeClient\bin\CoreData">
+      <Filter>Resource Dirs</Filter>
+    </None>
+    <None Include="D:\Projects\NextLifeClient\bin\Data">
+      <Filter>Resource Dirs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Resource Dirs">
+      <UniqueIdentifier>{8831AA76-532C-3D8E-BED0-2D9FF76B4CD5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5E6AEEF5-A937-3275-921E-B42D262C30BC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
