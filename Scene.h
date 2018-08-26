@@ -7,6 +7,7 @@
 #include <Urho3D/Graphics/Model.h>
 #include <Urho3D/Graphics/Material.h>
 #include <Urho3D/Graphics/Renderer.h>
+#include <Urho3D/Graphics/StaticModel.h>
 #include <Urho3D/Resource/ResourceCache.h>
 
 using namespace Urho3D;
@@ -37,10 +38,17 @@ private:
 		skybox->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
 		skybox->SetMaterial(cache_->GetResource<Material>("Materials/Skybox.xml"));
 
+		//Create Plane
+		PlaneNode = scene_->CreateChild("Plane");
+		PlaneNode->SetScale(Vector3(100.0f, 10.0f, 100.0f));
+		plane = PlaneNode->CreateComponent<StaticModel>();
+		plane->SetModel(cache_->GetResource<Model>("Models/Plane.mdl"));
+		plane->SetMaterial(cache_->GetResource<Material>("Materials/StoneTiled.xml"));
+
 		//Create Camera
 		CameraNode = scene_->CreateChild("Camera");
 		CameraNode->CreateComponent<Camera>();
-	
+		CameraNode->SetPosition(Vector3(0.0f, 5.0f, 0.0f));
 	}
 
 	void SetupViewport()
@@ -54,6 +62,9 @@ private:
 	SharedPtr <Scene> scene_;
 	SharedPtr <Node> SkyNode;
 	SharedPtr <Node> CameraNode;
+	SharedPtr <Node> PlaneNode;
+
 	Skybox* skybox;
+	StaticModel* plane;
 
 };
