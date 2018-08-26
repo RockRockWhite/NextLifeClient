@@ -44,12 +44,24 @@ public:
 	}
 private:
 	scene* scene_;
+	float yaw_=0;
+	float pitch_=0;
+
 	void MoveCamera(float timeStep)
 	{
 		//Move contorl.
 		const float MOVE_SPEED = 20.0f;
+		const float MOUSE_SENSITIVITY = 0.1f;
 
 		Input* input = GetSubsystem<Input>();
+
+		yaw_+= MOUSE_SENSITIVITY*input->GetMouseMove().x_;
+		pitch_+= MOUSE_SENSITIVITY*input->GetMouseMove().y_;
+		//Limit pitch.
+		pitch_ = Clamp(pitch_, -90.0f, 90.0f);
+		scene_->GetCameraNode()->SetRotation(Quaternion(pitch_, yaw_,0.0f));
+
+
 		if (input->GetKeyDown(KEY_W))
 		{
 			scene_->GetCameraNode()->Translate(Vector3().FORWARD*MOVE_SPEED*timeStep);
