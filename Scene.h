@@ -17,12 +17,18 @@ class scene
 public:
 	scene(Context* context, ResourceCache* cache, Renderer* render)
 	{
+		//Free
 		context_ = context;
 		cache_ = cache;
 		render_ = render;
 
 		CreateScene();
 		SetupViewport();
+	}
+	SharedPtr <Node> GetCameraNode()
+	{
+		//Get CameraNode;
+		return CameraNode;
 	}
 
 private:
