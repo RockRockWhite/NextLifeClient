@@ -3,14 +3,9 @@
 
 #include <Urho3D/Engine/Engine.h>
 #include <Urho3D/Engine/Application.h>
-
 #include <Urho3D/Engine/EngineDefs.h>
-
 #include <Urho3D/Engine/EngineEvents.h>
-
 #include<Urho3D/Input/InputEvents.h>
-
-#include<Urho3D/Resource/ResourceCache.h>
 
 #include "Character.h"
 #include "Scene.h"
@@ -26,24 +21,22 @@ public:
 	}
 	virtual void Setup()
 	{
-		cache_ = GetSubsystem<ResourceCache>();
-
-
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.25";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.26";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}
 	virtual void Start()
 	{
-		scene_ = new scene(context_, cache_);
+		//Initialize scene.
+		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
+
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, onKeyDown));
 	}
 	virtual void Stop()
 	{
 	}
 private:
-	ResourceCache* cache_;
 	scene* scene_;
 
 	void onKeyDown(StringHash type, VariantMap &data)
