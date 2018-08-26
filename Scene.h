@@ -8,6 +8,7 @@
 #include <Urho3D/Graphics/Material.h>
 #include <Urho3D/Graphics/Renderer.h>
 #include <Urho3D/Graphics/StaticModel.h>
+#include <Urho3D/Graphics/Light.h>
 #include <Urho3D/Resource/ResourceCache.h>
 
 using namespace Urho3D;
@@ -45,6 +46,12 @@ private:
 		plane->SetModel(cache_->GetResource<Model>("Models/Plane.mdl"));
 		plane->SetMaterial(cache_->GetResource<Material>("Materials/StoneTiled.xml"));
 
+		//Create Light
+		LightNode = scene_->CreateChild("Light");
+		LightNode->SetDirection(Vector3(0.6f, -1.0f, 0.8f));
+		light=LightNode->CreateComponent<Light>();
+		light->SetLightType(LIGHT_DIRECTIONAL);
+
 		//Create Camera
 		CameraNode = scene_->CreateChild("Camera");
 		CameraNode->CreateComponent<Camera>();
@@ -63,8 +70,10 @@ private:
 	SharedPtr <Node> SkyNode;
 	SharedPtr <Node> CameraNode;
 	SharedPtr <Node> PlaneNode;
+	SharedPtr <Node> LightNode;
 
 	Skybox* skybox;
 	StaticModel* plane;
+	Light* light;
 
 };
