@@ -98,7 +98,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/Urho3D/bin/Urho3D.dll D:/Projects/NextLifeClient/bin
 if %errorlevel% neq 0 goto :cmEnd
@@ -166,7 +167,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/Urho3D/bin/Urho3D.dll D:/Projects/NextLifeClient/bin
 if %errorlevel% neq 0 goto :cmEnd
@@ -233,7 +235,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/Urho3D/bin/Urho3D.dll D:/Projects/NextLifeClient/bin
 if %errorlevel% neq 0 goto :cmEnd
@@ -320,6 +323,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{13F856D4-25D3-333E-A786-90DC2D3F08BC}</Project>
       <Name>ZERO_CHECK</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

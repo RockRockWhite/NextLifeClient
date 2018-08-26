@@ -10,6 +10,10 @@
 
 #include<Urho3D/Input/InputEvents.h>
 
+#include<Urho3D/Resource/ResourceCache.h>
+
+#include "Character.h"
+#include "Scene.h"
 
 using namespace Urho3D;
 
@@ -22,20 +26,26 @@ public:
 	}
 	virtual void Setup()
 	{
+		cache_ = GetSubsystem<ResourceCache>();
+
+
 		engineParameters_[EP_FULL_SCREEN] = false;
 		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.25";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
-
 	}
 	virtual void Start()
 	{
+		scene_ = new scene(context_, cache_);
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, onKeyDown));
 	}
 	virtual void Stop()
 	{
 	}
 private:
+	ResourceCache* cache_;
+	scene* scene_;
+
 	void onKeyDown(StringHash type, VariantMap &data)
 	{
 		//Deal with KEYDOWN events;

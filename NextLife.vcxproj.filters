@@ -23,5 +23,16 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{5E6AEEF5-A937-3275-921E-B42D262C30BC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Head Files">
+      <UniqueIdentifier>{cbf90be5-999e-4bd6-bda3-4571c382ec67}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Character.h">
+      <Filter>Head Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Head Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
