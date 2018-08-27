@@ -13,6 +13,8 @@
 #include <Urho3D/Graphics/AnimatedModel.h>
 #include <Urho3D/Graphics/AnimationState.h>
 #include <Urho3D/Graphics/Zone.h>
+#include <Urho3D/Physics/CollisionShape.h>
+#include <Urho3D/Physics/RigidBody.h>
 #include <Urho3D/Resource/ResourceCache.h>
 
 using namespace Urho3D;
@@ -80,10 +82,15 @@ private:
 
 		//Create Plane
 		PlaneNode = scene_->CreateChild("Plane");
-		PlaneNode->SetScale(Vector3(100.0f, 10.0f, 100.0f));
+		PlaneNode->SetPosition(Vector3(0.0f, -0.1f, 0.0f));
+		PlaneNode->SetScale(Vector3(100.0f, 0.1f, 100.0f));
 		plane = PlaneNode->CreateComponent<StaticModel>();
-		plane->SetModel(cache_->GetResource<Model>("Models/Plane.mdl"));
+		plane->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
 		plane->SetMaterial(cache_->GetResource<Material>("Materials/StoneTiled.xml"));
+		//Set physics
+		auto* body=PlaneNode->CreateComponent<RigidBody>();
+		CollisionShape* PlaneShape=PlaneNode->CreateComponent<CollisionShape>();
+		PlaneShape->SetBox(Vector3::ONE);
 
 		//Create Light
 		LightNode = scene_->CreateChild("Light");
@@ -117,6 +124,27 @@ private:
 				WalkAState->SetTime(WalkAState->GetAnimation()->GetLength());
 			}
 		}
+
+		//Create Boxs;
+		for (int i = 0; i < 2000; i++)
+		{
+			auto* BoxNode = scene_->CreateChild("Box");
+			SharedPtr<StaticModel> BoxObject;
+			BoxNode->SetScale(Vector3(0.5f, 0.5f, 0.5f));
+			BoxNode->SetPosition(Vector3(0, 3.0f * i+50, 0));
+			BoxObject = BoxNode->CreateComponent<StaticModel>();
+			BoxObject->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
+			BoxObject->SetMaterial(cache_->GetResource<Material>("Materials/StoneSmall.xml"));
+			BoxObject->SetCastShadows(true);
+
+			//Physics
+			auto* BoxRigidBody = BoxNode->CreateComponent<RigidBody>();
+			BoxRigidBody->SetMass(1);
+			auto* BoxCollisionShape = BoxNode->CreateComponent<CollisionShape>();
+			BoxCollisionShape->SetBox(Vector3::ONE);
+
+		}
+
 	}
 	void SetupViewport()
 	{
