@@ -24,7 +24,7 @@ public:
 	virtual void Setup()
 	{
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.26";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.27";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}
