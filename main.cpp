@@ -78,8 +78,6 @@ private:
 		{
 			scene_->GetCameraNode()->Translate(Vector3().RIGHT*MOVE_SPEED*timeStep);
 		}
-
-
 	}
 
 	void Update(StringHash type, VariantMap& data)
@@ -87,6 +85,7 @@ private:
 		//Deal with Update events
 		using namespace Update;
 		MoveCamera(data[P_TIMESTEP].GetFloat());
+		scene_->UpdateScene(data[P_TIMESTEP].GetFloat());
 	}
 	void onKeyDown(StringHash type, VariantMap &data)
 	{
