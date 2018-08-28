@@ -4,6 +4,9 @@
     <ClCompile Include="D:\Projects\NextLifeClient\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Controls_Def.h">
+      <Filter>Head Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Projects\NextLifeClient\CMakeLists.txt" />

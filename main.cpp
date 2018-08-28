@@ -7,12 +7,15 @@
 #include <Urho3D/Engine/EngineEvents.h>
 #include <Urho3D/Input/InputEvents.h>
 #include <Urho3D/Input/Input.h>
+#include <Urho3D/Input/Controls.h>
 #include <Urho3D/Core/CoreEvents.h>
 
 #include "Character.h"
 #include "Scene.h"
 
 using namespace Urho3D;
+
+
 
 class NextLife :public Application
 {
@@ -24,7 +27,7 @@ public:
 	virtual void Setup()
 	{
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.27";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.28";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}
@@ -32,6 +35,8 @@ public:
 	{
 		//Initialize scene.
 		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
+		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
+		controls_ = new Controls();
 
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, onKeyDown));
 		SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(NextLife, Update));
@@ -41,9 +46,13 @@ public:
 		//Free.
 		delete scene_;
 		scene_ = 0;
+		delete character_;
+		character_ = 0;
 	}
 private:
 	scene* scene_;
+	Character* character_;
+	Controls* controls_;
 	float yaw_=0;
 	float pitch_=0;
 
@@ -60,7 +69,6 @@ private:
 		//Limit pitch.
 		pitch_ = Clamp(pitch_, -90.0f, 90.0f);
 		scene_->GetCameraNode()->SetRotation(Quaternion(pitch_, yaw_,0.0f));
-
 
 		if (input->GetKeyDown(KEY_W))
 		{
@@ -84,8 +92,24 @@ private:
 	{
 		//Deal with Update events
 		using namespace Update;
-		MoveCamera(data[P_TIMESTEP].GetFloat());
-		scene_->UpdateScene(data[P_TIMESTEP].GetFloat());
+		float timeStep = data[P_TIMESTEP].GetFloat();
+		
+		//Clear controls
+		controls_->Set(CTRL_CLEAR);
+		//Get controls;
+		Input* input = GetSubsystem<Input>();
+		controls_->Set(CTRL_FORWARD, input->GetKeyDown(KEY_W));
+		controls_->Set(CTRL_BACK, input->GetKeyDown(KEY_S));
+		controls_->Set(CTRL_LEFT, input->GetKeyDown(KEY_A));
+		controls_->Set(CTRL_RIGHT, input->GetKeyDown(KEY_D));
+		controls_->Set(CTRL_JUMP, input->GetKeyDown(KEY_SPACE));
+
+		controls_->yaw_ += input->GetMouseMove().x_;
+		controls_->pitch_+= input->GetMouseMove().y_;
+
+		//MoveCamera(timeStep);
+		scene_->Update(timeStep);
+		character_->Update(timeStep, controls_);
 	}
 	void onKeyDown(StringHash type, VariantMap &data)
 	{

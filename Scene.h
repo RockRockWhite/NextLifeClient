@@ -15,6 +15,7 @@
 #include <Urho3D/Graphics/Zone.h>
 #include <Urho3D/Physics/CollisionShape.h>
 #include <Urho3D/Physics/RigidBody.h>
+#include <Urho3D/Physics/PhysicsWorld.h>
 #include <Urho3D/Resource/ResourceCache.h>
 
 using namespace Urho3D;
@@ -36,7 +37,12 @@ public:
 		//Get CameraNode;
 		return CameraNode;
 	}
-	void UpdateScene(float timeStep)
+	SharedPtr <Scene> GetScene()
+	{
+		//Get CameraNode;
+		return scene_;
+	}
+	void Update(float timeStep)
 	{
 		const float MODEL_MOVE_SPEED = 2.0f;
 		const float MODEL_ROTATE_SPEED = 100.0f;
@@ -66,8 +72,13 @@ private:
 	{
 		scene_ = new Scene(context_);
 
+		//Set quality
+		render_->SetShadowMapSize(10240);
+		render_->SetMaterialQuality(QUALITY_MAX);
+
 		//Create Octree
 		scene_->CreateComponent<Octree>();
+		scene_->CreateComponent<PhysicsWorld>();
 
 		//Create Zone
 		ZoneNode = scene_->CreateChild("Zone");
@@ -82,8 +93,8 @@ private:
 
 		//Create Plane
 		PlaneNode = scene_->CreateChild("Plane");
-		PlaneNode->SetPosition(Vector3(0.0f, -0.1f, 0.0f));
-		PlaneNode->SetScale(Vector3(100.0f, 0.1f, 100.0f));
+		PlaneNode->SetPosition(Vector3(0.0f, -0.5f, 0.0f));
+		PlaneNode->SetScale(Vector3(500.0f, 1.0f, 500.0f));
 		plane = PlaneNode->CreateComponent<StaticModel>();
 		plane->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
 		plane->SetMaterial(cache_->GetResource<Material>("Materials/StoneTiled.xml"));
@@ -126,12 +137,11 @@ private:
 		}
 
 		//Create Boxs;
-		for (int i = 0; i < 2000; i++)
+		for (int i = 0; i <500; i++)
 		{
 			auto* BoxNode = scene_->CreateChild("Box");
 			SharedPtr<StaticModel> BoxObject;
-			BoxNode->SetScale(Vector3(0.5f, 0.5f, 0.5f));
-			BoxNode->SetPosition(Vector3(0, 3.0f * i+50, 0));
+			BoxNode->SetPosition(Vector3(0, 2.0f * i+100, 0));
 			BoxObject = BoxNode->CreateComponent<StaticModel>();
 			BoxObject->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
 			BoxObject->SetMaterial(cache_->GetResource<Material>("Materials/StoneSmall.xml"));
@@ -139,7 +149,9 @@ private:
 
 			//Physics
 			auto* BoxRigidBody = BoxNode->CreateComponent<RigidBody>();
-			BoxRigidBody->SetMass(1);
+			BoxRigidBody->SetMass(1.0f);
+			BoxRigidBody->SetFriction(1.0f);
+			BoxRigidBody->SetCollisionEventMode(COLLISION_NEVER);
 			auto* BoxCollisionShape = BoxNode->CreateComponent<CollisionShape>();
 			BoxCollisionShape->SetBox(Vector3::ONE);
 

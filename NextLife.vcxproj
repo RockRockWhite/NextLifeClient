@@ -314,6 +314,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Controls_Def.h" />
     <ClCompile Include="D:\Projects\NextLifeClient\main.cpp" />
     <None Include="D:\Projects\NextLifeClient\bin\CoreData" />
     <None Include="D:\Projects\NextLifeClient\bin\Data" />
