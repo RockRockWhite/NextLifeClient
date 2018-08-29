@@ -99,9 +99,11 @@ private:
 		plane->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
 		plane->SetMaterial(cache_->GetResource<Material>("Materials/StoneTiled.xml"));
 		//Set physics
-		auto* body=PlaneNode->CreateComponent<RigidBody>();
+		auto* PlaneBody=PlaneNode->CreateComponent<RigidBody>();
 		CollisionShape* PlaneShape=PlaneNode->CreateComponent<CollisionShape>();
 		PlaneShape->SetBox(Vector3::ONE);
+		PlaneBody->SetCollisionLayer(2);
+
 
 		//Create Light
 		LightNode = scene_->CreateChild("Light");
@@ -137,7 +139,7 @@ private:
 		}
 
 		//Create Boxs;
-		for (int i = 0; i <500; i++)
+		for (int i = 0; i <2000; i++)
 		{
 			auto* BoxNode = scene_->CreateChild("Box");
 			SharedPtr<StaticModel> BoxObject;

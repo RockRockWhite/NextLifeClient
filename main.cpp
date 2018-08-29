@@ -56,6 +56,8 @@ private:
 	float yaw_=0;
 	float pitch_=0;
 
+
+
 	void MoveCamera(float timeStep)
 	{
 		//Move contorl.
@@ -104,8 +106,8 @@ private:
 		controls_->Set(CTRL_RIGHT, input->GetKeyDown(KEY_D));
 		controls_->Set(CTRL_JUMP, input->GetKeyDown(KEY_SPACE));
 
-		controls_->yaw_ += input->GetMouseMove().x_;
-		controls_->pitch_+= input->GetMouseMove().y_;
+		controls_->yaw_ += input->GetMouseMove().x_*MOUSE_SENSITIVITY;
+		controls_->pitch_+= input->GetMouseMove().y_*MOUSE_SENSITIVITY;
 
 		//MoveCamera(timeStep);
 		scene_->Update(timeStep);
