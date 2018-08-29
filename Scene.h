@@ -100,9 +100,9 @@ private:
 		plane->SetMaterial(cache_->GetResource<Material>("Materials/StoneTiled.xml"));
 		//Set physics
 		auto* PlaneBody=PlaneNode->CreateComponent<RigidBody>();
+		PlaneBody->SetCollisionLayer(2);
 		CollisionShape* PlaneShape=PlaneNode->CreateComponent<CollisionShape>();
 		PlaneShape->SetBox(Vector3::ONE);
-		PlaneBody->SetCollisionLayer(2);
 
 
 		//Create Light

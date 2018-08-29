@@ -16,13 +16,12 @@
 
 using namespace Urho3D;
 
-const float MOVE_SPEED = 20.0f;
-const float MOUSE_SENSITIVITY = 0.1f;
-const float GROUND_FORCE = -0.8f;
-const float CAMERA_MIN_DIST = 1.0f;
-const float CAMERA_INITIAL_DIST = 5.0f;
-const float CAMERA_MAX_DIST = 20.0f;
-
+const float MOVE_SPEED = 10.0f;
+const float MOUSE_SENSITIVITY=0.1f;
+const float GROUND_FORCE = 0.8f;
+const float LAY_DISTANCE = 5.0f;
+const float IN_AIR_TIME= 1.0f;
+const float JUMP_FORCE = 350.0f;
 class Character
 {
 public:
@@ -36,19 +35,31 @@ public:
 	}
 	void Update(float timeStep, Controls* controls)
 	{
-		//Gec Velocity
-		auto* CharacterBody = CharacterNode->GetComponent<RigidBody>();
-		Vector3 lineVelocity = CharacterBody->GetLinearVelocity();
-		Vector3 planeVelocity = Vector3(lineVelocity.x_, 0.0f, lineVelocity.z_);
+		//Update InAir State
+
+		OnGround = InAirTime >IN_AIR_TIME;
+		if (!OnGround)
+		{
+			InAirTime += timeStep;
+		}
+		else
+			InAirTime = 0;
+
+
+		Vector3 moveDir = Vector3::ZERO;
+		Quaternion rot = CharacterNode->GetRotation();
+		Vector3 pos = CharacterNode->GetPosition();
+		auto CharacterBody = CharacterNode->GetComponent<RigidBody>();
 
 		//Apply Force
-		if (1/*is on ground*/)
-		{
-			CharacterBody->ApplyImpulse(planeVelocity*GROUND_FORCE);
-		}
+		Vector3 LineVelocity = CharacterBody->GetLinearVelocity();
+		Vector3 PlaneVelocity = Vector3(LineVelocity.x_, 0.0f, LineVelocity.z_);
+		CharacterBody->ApplyImpulse(-PlaneVelocity*GROUND_FORCE);
 
-		//Update controls
-		Vector3 moveDir = Vector3::ZERO;
+		//Set Roatation
+		CharacterNode->SetRotation(Quaternion(controls->yaw_, Vector3::UP));
+
+		//Get controls
 		if (controls->IsDown(CTRL_FORWARD))
 			moveDir += Vector3::FORWARD;
 		if (controls->IsDown(CTRL_BACK))
@@ -58,62 +69,56 @@ public:
 		if (controls->IsDown(CTRL_RIGHT))
 			moveDir += Vector3::RIGHT;
 
-		//Normalize move
+		if (controls->IsDown(CTRL_JUMP) && OnGround)
+		{
+			OnGround = false;
+	
+		}
+
+
+		//Normalize
 		if (moveDir.LengthSquared() > 0.0f)
 			moveDir.Normalize();
 
-		//		
-		CharacterNode->SetRotation(Quaternion(controls->yaw_, Vector3::UP));
-
-		//Get
-		Quaternion rot = CharacterNode->GetRotation();
+		//Walk
+		CharacterBody->ApplyImpulse(rot*moveDir*MOVE_SPEED*GROUND_FORCE);
 
 		//Limit pitch
-		controls->pitch_= Clamp(controls->pitch_, -80.0f, 80.0f);
-
-		//Set dit
-		Quaternion dir = rot*Quaternion(controls->pitch_, Vector3::RIGHT);
-		Vector3 RayDir = dir*Vector3::BACK;
-
-		//Move Character
-		CharacterBody->ApplyImpulse(rot*moveDir*MOVE_SPEED);
-
-
-
-		/*
-		float rayDistance = CAMERA_INITIAL_DIST;
-		PhysicsRaycastResult result;
-
-		Vector3 origin = CharacterNode->GetPosition() + rot*Vector3(0.0f, 1.7f, 0.0f);
-		scene_->GetComponent<PhysicsWorld>()->RaycastSingle(result, Ray(origin, RayDir), rayDistance, 2);
-
-		if (result.body_)
-			rayDistance = result.distance_;
-			*/
-
-		Vector3 aimPoint = CharacterNode->GetPosition() + rot * Vector3(0.0f, 1.7f, 0.0f);
-
-
-		float rayDistance = 5;
-
-		PhysicsRaycastResult result;
-
-		scene_->GetComponent<PhysicsWorld>()->RaycastSingle(result, Ray(aimPoint, RayDir), rayDistance, 2);
-		if (result.body_)
-			rayDistance = result.distance_;
-
-		camera_->SetPosition(aimPoint + RayDir * rayDistance);
-
-
+		controls->pitch_ = Clamp(controls->pitch_, -80.0f, 80.0f);
 
 		//Set Camera
-		//camera_->SetPosition(CharacterNode->GetPosition() + RayDir * rayDistance);
+		Quaternion dir = rot*Quaternion(controls->pitch_, Vector3::RIGHT);
 		camera_->SetRotation(dir);
 
+		Vector3 RayDir = dir*Vector3::BACK;
+		Vector3 origin = pos + rot*Vector3(0.0f, 1.7f, 0.0f);
+
+		//Raycast
+		float distance = LAY_DISTANCE;
+		PhysicsRaycastResult result;
+		scene_->GetComponent<PhysicsWorld>()->RaycastSingle(result, Ray(origin, RayDir), distance, 2);
+		if (result.body_)
+			distance = result.distance_;
+
+		camera_->SetPosition(origin + RayDir * distance);
 
 
-		CharacterNode->GetComponent<AnimationController>(true)->PlayExclusive("Models/Mutant/Mutant_Run.ani", 0, true, 50);
-		CharacterNode->GetComponent<AnimationController>(true)->SetSpeed("Models/Mutant/Mutant_Run.ani", 1.0f);
+		//Play Animations
+
+		if (OnGround)
+		{
+			if (!moveDir.Equals(Vector3::ZERO))
+				AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Run.ani", 0, true, 0.2f);
+			else
+				AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Idle0.ani", 0, true, 0.2f);
+		}
+		else
+		{
+
+			AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Jump1.ani", 0, false, 0.2f);
+
+		}
+
 
 	}
 
@@ -126,6 +131,11 @@ private:
 	SharedPtr<Node> CharacterNode;
 	AnimatedModel* CharacterObject;
 	AnimationController* AnimCtrl;
+
+	bool OnGround = true;
+	bool OnJump = false;
+	float InAirTime=0;
+
 	void CreateCharacter()
 	{
 		//Create Character Node
@@ -148,10 +158,10 @@ private:
 
 		//Init physics;
 		auto* CharacterBody=CharacterNode->CreateComponent<RigidBody>();
-		CharacterBody->SetMass(1.0f);
+		CharacterBody->SetMass(50.0f);
 		CharacterBody->SetPosition(Vector3(0, 20, 0));
-		CharacterBody->SetAngularFactor(Vector3::ZERO);
 
+		CharacterBody->SetAngularFactor(Vector3::ZERO);
 		auto* CharacterShape=CharacterNode->CreateComponent<CollisionShape>();
 		CharacterShape->SetCapsule(0.7f, 1.8f, Vector3(0.0f, 0.9f, 0.0f));
 	}
