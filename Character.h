@@ -20,8 +20,7 @@ const float MOVE_SPEED = 10.0f;
 const float MOUSE_SENSITIVITY=0.1f;
 const float GROUND_FORCE = 0.8f;
 const float LAY_DISTANCE = 5.0f;
-const float IN_AIR_TIME= 1.0f;
-const float JUMP_FORCE = 350.0f;
+
 class Character
 {
 public:
@@ -36,15 +35,6 @@ public:
 	void Update(float timeStep, Controls* controls)
 	{
 		//Update InAir State
-
-		OnGround = InAirTime >IN_AIR_TIME;
-		if (!OnGround)
-		{
-			InAirTime += timeStep;
-		}
-		else
-			InAirTime = 0;
-
 
 		Vector3 moveDir = Vector3::ZERO;
 		Quaternion rot = CharacterNode->GetRotation();
@@ -68,13 +58,6 @@ public:
 			moveDir += Vector3::LEFT;
 		if (controls->IsDown(CTRL_RIGHT))
 			moveDir += Vector3::RIGHT;
-
-		if (controls->IsDown(CTRL_JUMP) && OnGround)
-		{
-			OnGround = false;
-	
-		}
-
 
 		//Normalize
 		if (moveDir.LengthSquared() > 0.0f)
@@ -104,20 +87,11 @@ public:
 
 
 		//Play Animations
-
-		if (OnGround)
-		{
-			if (!moveDir.Equals(Vector3::ZERO))
-				AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Run.ani", 0, true, 0.2f);
-			else
-				AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Idle0.ani", 0, true, 0.2f);
-		}
+			
+		if (!moveDir.Equals(Vector3::ZERO))
+			AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Run.ani", 0, true, 0.2f);
 		else
-		{
-
-			AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Jump1.ani", 0, false, 0.2f);
-
-		}
+			AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Idle0.ani", 0, true, 0.2f);
 
 
 	}
@@ -132,9 +106,6 @@ private:
 	AnimatedModel* CharacterObject;
 	AnimationController* AnimCtrl;
 
-	bool OnGround = true;
-	bool OnJump = false;
-	float InAirTime=0;
 
 	void CreateCharacter()
 	{

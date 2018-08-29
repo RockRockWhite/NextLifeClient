@@ -12,6 +12,7 @@
 
 #include "Character.h"
 #include "Scene.h"
+#include "GUI.h"
 
 using namespace Urho3D;
 
@@ -37,9 +38,11 @@ public:
 		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
 		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
 		controls_ = new Controls();
+		ui_ = new GUI(context_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
 
-		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, onKeyDown));
+		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, OnKeyDown));
 		SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(NextLife, Update));
+		SubscribeToEvent(E_UIMOUSECLICK, URHO3D_HANDLER(NextLife, OnUIClicked));
 	}
 	virtual void Stop()
 	{
@@ -55,6 +58,7 @@ private:
 	scene* scene_;
 	Character* character_;
 	Controls* controls_;
+	GUI* ui_;
 
 	void Update(StringHash type, VariantMap& data)
 	{
@@ -81,13 +85,29 @@ private:
 		character_->Update(timeStep, controls_);
 	}
 
-	void onKeyDown(StringHash type, VariantMap &data)
+	void OnKeyDown(StringHash type, VariantMap &data)
 	{
 		//Deal with KEYDOWN events
 		using namespace KeyDown;
 		if (data[P_KEY].GetInt() == KEY_ESCAPE)//Exit when the key ESC down;
 		{
-			engine_->Exit();
+			ui_->SetMenuVisible(!ui_->GetMenuVisible());
+			GetSubsystem<Input>()->SetMouseVisible(ui_->GetMenuVisible());
+		}
+	}
+
+	void OnUIClicked(StringHash type, VariantMap& data)
+	{
+	
+		using namespace Click;
+		auto clicked = static_cast<UIElement* >(data[P_ELEMENT].GetPtr());
+		if (clicked)
+		{
+			String name = clicked->GetName();
+			if (name == "ExitButton")
+				engine_->Exit();
+			else
+			ui_->OnClicked(name);
 		}
 	}
 

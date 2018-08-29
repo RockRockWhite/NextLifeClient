@@ -37,5 +37,8 @@
     <ClInclude Include="Scene.h">
       <Filter>Head Files</Filter>
     </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Head Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
