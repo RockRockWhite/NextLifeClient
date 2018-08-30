@@ -6,6 +6,8 @@
 #include <Urho3D/UI/Button.h>
 #include <Urho3D/UI/UIEvents.h>
 #include <Urho3D/UI/ProgressBar.h>
+#include <Urho3D/UI/LineEdit.h>
+#include <Urho3D/Input/Input.h>
 #include <Urho3D/Graphics/Texture2D.h>
 #include <Urho3D/Resource/ResourceCache.h>
 
@@ -14,17 +16,73 @@ using namespace Urho3D;
 class GUI
 {
 public:
-	GUI(Context* context,UIElement* UIRoot, ResourceCache* cache):
-		context_(context), root_(UIRoot),cache_(cache)
+	GUI(Context* context, SharedPtr<Engine> engine, UIElement* UIRoot, ResourceCache* cache ) :
+		context_(context), engine_(engine), root_(UIRoot), cache_(cache)
 	{
+		engine_ = engine;
 		root_->SetDefaultStyle(cache_->GetResource<XMLFile>("UI/DefaultStyle.xml"));
+		CreateLoginWindow();
 		CreateMainUI();
 		CreateMenu();
 	}
+
 	void OnClicked(String name)
 	{
 		if (name == "CancelButton")
+		{
 			MenuWindow->SetVisible(false);
+			engine_->GetSubsystem<Input>()->SetMouseVisible(false);
+		
+		}
+			
+		if (name == "ExitButton")
+			engine_->Exit();
+	}
+	void CreateLoginWindow()
+	{
+	
+		engine_->GetSubsystem<Input>()->SetMouseVisible(true);
+		
+		//LoginWindow
+		auto* LoginWindow = root_->CreateChild<Window>("LoginWindow");
+		LoginWindow->SetSize(350, 200);
+		LoginWindow->SetStyleAuto();
+		LoginWindow->SetAlignment(HA_CENTER, VA_CENTER);
+
+		//LoginWindowText
+		auto* LoginWindowText = LoginWindow->CreateChild<Text>("LoginWindowText");
+		LoginWindowText->SetText("Login");
+		LoginWindowText->SetStyleAuto();
+		LoginWindowText->SetAlignment(HA_CENTER, VA_TOP);
+		LoginWindowText->SetFontSize(40);
+
+		//UserText
+		auto* UserText = LoginWindow->CreateChild<Text>("UserText");
+		UserText->SetText("User:");
+		UserText->SetStyleAuto();
+		UserText->SetFontSize(13);
+		UserText->SetPosition(5, 60);
+
+		//UserLineEdit
+		auto* UserLineEdit = LoginWindow->CreateChild<LineEdit>("UserLineEdit");
+		UserLineEdit->SetStyleAuto();
+		UserLineEdit->SetSize(230,30) ;
+		UserLineEdit->SetPosition(100,60);
+
+
+		//PasswordsText
+		auto* PasswordsText = LoginWindow->CreateChild<Text>("PasswordsText");
+		PasswordsText->SetText("Passwords:");
+		PasswordsText->SetStyleAuto();
+		PasswordsText->SetFontSize(13);
+		PasswordsText->SetPosition(5, 100);
+
+		//PasswordsLineEdit
+		auto* PasswordsLineEdit = LoginWindow->CreateChild<LineEdit>("PasswordsLineEdit");
+		PasswordsLineEdit->SetStyleAuto();
+		PasswordsLineEdit->SetSize(230, 30);
+		PasswordsLineEdit->SetPosition(100, 100);
+		PasswordsLineEdit->SetEchoCharacter(42);
 	}
 	void CreateMainUI()
 	{
@@ -120,11 +178,8 @@ public:
 		TimeText->SetText("Alive: 3 days     Time: 11:15");
 		TimeText->SetStyleAuto();
 		TimeText->SetAlignment(HA_CENTER, VA_BOTTOM);
-	
+
 	}
-
-
-
 
 
 	void CreateMenu()
@@ -211,6 +266,7 @@ public:
 	};
 
 private:
+	SharedPtr<Engine> engine_;
 	Context* context_;
 	UIElement* root_;
 	ResourceCache* cache_;

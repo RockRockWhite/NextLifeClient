@@ -25,6 +25,7 @@ public:
 	}
 	virtual void Setup()
 	{
+		
 		engineParameters_[EP_FULL_SCREEN] = false;
 		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.29";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
@@ -36,7 +37,7 @@ public:
 		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
 		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
 		controls_ = new Controls();
-		ui_ = new GUI(context_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
+		ui_ = new GUI(context_,engine_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
 
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, OnKeyDown));
 		SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(NextLife, Update));
@@ -103,10 +104,7 @@ private:
 		if (clicked)
 		{
 			String name = clicked->GetName();
-			if (name == "ExitButton")
-				engine_->Exit();
-			else
-				ui_->OnClicked(name);
+			ui_->OnClicked(name);
 		}
 	}
 
