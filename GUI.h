@@ -5,6 +5,7 @@
 #include <Urho3D/UI/Text.h>
 #include <Urho3D/UI/Button.h>
 #include <Urho3D/UI/UIEvents.h>
+#include <Urho3D/UI/ProgressBar.h>
 #include <Urho3D/Graphics/Texture2D.h>
 #include <Urho3D/Resource/ResourceCache.h>
 
@@ -17,6 +18,7 @@ public:
 		context_(context), root_(UIRoot),cache_(cache)
 	{
 		root_->SetDefaultStyle(cache_->GetResource<XMLFile>("UI/DefaultStyle.xml"));
+		CreateMainUI();
 		CreateMenu();
 	}
 	void OnClicked(String name)
@@ -24,6 +26,106 @@ public:
 		if (name == "CancelButton")
 			MenuWindow->SetVisible(false);
 	}
+	void CreateMainUI()
+	{
+
+		/***********************************************************************
+		TestText
+		***********************************************************************/
+		auto* TestText = root_->CreateChild<Text>("TestText");
+		TestText->SetText("NextLife Client Base V1.0.8.30");
+		TestText->SetStyleAuto();
+		TestText->SetAlignment(HA_LEFT, VA_BOTTOM);
+		TestText->SetPosition(5, 0);
+
+		/***********************************************************************
+		StateWindow
+		***********************************************************************/
+		//Create StateWindow 
+		auto* StateWindow = new Window(context_);
+		StateWindow->SetName("StateWindow");
+		root_->AddChild(StateWindow);
+		StateWindow->SetSize(300,130);
+		StateWindow->SetAlignment(HA_LEFT, VA_TOP);
+		StateWindow->SetStyleAuto();
+
+		//UserNameText
+		auto* UserNameText = StateWindow->CreateChild<Text>("UserNameText");
+		UserNameText->SetText("Rock White");
+		UserNameText->SetStyleAuto();
+		UserNameText->SetFontSize(14);
+		UserNameText->SetAlignment(HA_CENTER, VA_TOP);
+
+		//Health Text
+		auto* HealthText = StateWindow->CreateChild<Text>("HealthText");
+		HealthText->SetText("Health:");
+		HealthText->SetStyleAuto();
+		HealthText->SetFontSize(12);
+		HealthText->SetPosition(5, 30);
+
+		//Health Bar
+		auto* HealthBar = StateWindow->CreateChild<ProgressBar>("HealthBar");
+		HealthBar->SetStyleAuto();
+		HealthBar->SetSize(200, 20);
+		HealthBar->SetValue(100.0f);
+		HealthBar->SetPosition(90, 30);
+
+		//FoodBar Text
+		auto* FoodText = StateWindow->CreateChild<Text>("FoodText");
+		FoodText->SetText("Food:");
+		FoodText->SetStyleAuto();
+		FoodText->SetFontSize(12);
+		FoodText->SetPosition(5, 60);
+
+		//Food Bar
+		auto* FoodBar = StateWindow->CreateChild<ProgressBar>("FoodBar");
+		FoodBar->SetStyleAuto();
+		FoodBar->SetSize(200, 20);
+		FoodBar->SetValue(100.0f);
+		FoodBar->SetPosition(90, 60);
+
+		//IntellectBar Text
+		auto* IntellectText = StateWindow->CreateChild<Text>("IntellectText");
+		IntellectText->SetText("Intellect:");
+		IntellectText->SetStyleAuto();
+		IntellectText->SetFontSize(12);
+		IntellectText->SetPosition(5, 90);
+
+		//Intellect Bar
+		auto* IntellectBar = StateWindow->CreateChild<ProgressBar>("IntellectBar");
+		IntellectBar->SetStyleAuto();
+		IntellectBar->SetSize(200, 20);
+		IntellectBar->SetValue(100.0f);
+		IntellectBar->SetPosition(90, 90);
+
+		/***********************************************************************
+		MapWindow
+		***********************************************************************/
+		//Create MapWindow
+		auto* MapWindow = root_->CreateChild<Window>("MapWindow");
+		MapWindow->SetStyleAuto();
+		MapWindow->SetSize(300, 330);
+		MapWindow->SetAlignment(HA_RIGHT, VA_BOTTOM);
+
+		//TODO Text
+		auto* TODOText = MapWindow->CreateChild<Text>("TODOText");
+		TODOText->SetText("Map to be here.");
+		TODOText->SetAlignment(HA_CENTER, VA_CENTER);
+		TODOText->SetStyleAuto();
+		TODOText->SetFontSize(25);
+
+
+	    //TimeText
+		auto* TimeText = MapWindow->CreateChild<Text>("TimeText");
+		TimeText->SetText("Alive: 3 days     Time: 11:15");
+		TimeText->SetStyleAuto();
+		TimeText->SetAlignment(HA_CENTER, VA_BOTTOM);
+	
+	}
+
+
+
+
 
 	void CreateMenu()
 	{
@@ -108,11 +210,12 @@ public:
 		return MenuWindow->IsVisible();
 	};
 
-
 private:
 	Context* context_;
 	UIElement* root_;
 	ResourceCache* cache_;
+
 	SharedPtr<Window> MenuWindow;
+	SharedPtr<Window> StateWindow;
 };
 

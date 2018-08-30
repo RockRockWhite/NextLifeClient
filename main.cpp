@@ -16,8 +16,6 @@
 
 using namespace Urho3D;
 
-
-
 class NextLife :public Application
 {
 public:
@@ -53,6 +51,8 @@ public:
 		character_ = 0;
 		delete controls_;
 		controls_ = 0;
+		delete ui_;
+		ui_ = 0;
 	}
 private:
 	scene* scene_;
@@ -98,7 +98,6 @@ private:
 
 	void OnUIClicked(StringHash type, VariantMap& data)
 	{
-	
 		using namespace Click;
 		auto clicked = static_cast<UIElement* >(data[P_ELEMENT].GetPtr());
 		if (clicked)
@@ -107,7 +106,7 @@ private:
 			if (name == "ExitButton")
 				engine_->Exit();
 			else
-			ui_->OnClicked(name);
+				ui_->OnClicked(name);
 		}
 	}
 
