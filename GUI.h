@@ -48,7 +48,7 @@ public:
 		LoginWindow->SetSize(350, 200);
 		LoginWindow->SetStyleAuto();
 		LoginWindow->SetAlignment(HA_CENTER, VA_CENTER);
-
+		LoginWindow->SetVisible(0);
 		//LoginWindowText
 		auto* LoginWindowText = LoginWindow->CreateChild<Text>("LoginWindowText");
 		LoginWindowText->SetText("Login");
@@ -91,7 +91,7 @@ public:
 		TestText
 		***********************************************************************/
 		auto* TestText = root_->CreateChild<Text>("TestText");
-		TestText->SetText("NextLife Client Base V1.0.8.30");
+		TestText->SetText("NextLife Client Base V1.0.8.31");
 		TestText->SetStyleAuto();
 		TestText->SetAlignment(HA_LEFT, VA_BOTTOM);
 		TestText->SetPosition(5, 0);

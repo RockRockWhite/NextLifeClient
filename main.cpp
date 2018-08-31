@@ -27,7 +27,7 @@ public:
 	{
 		
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.29";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.31";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}
@@ -82,8 +82,9 @@ private:
 		controls_->yaw_ += input->GetMouseMoveX()*MOUSE_SENSITIVITY;
 		controls_->pitch_ += input->GetMouseMoveY()*MOUSE_SENSITIVITY;
 
-		scene_->Update(timeStep);
 		character_->Update(timeStep, controls_);
+		scene_->Update(timeStep);
+
 	}
 
 	void OnKeyDown(StringHash type, VariantMap &data)

@@ -34,7 +34,8 @@ public:
 	}
 	void Update(float timeStep, Controls* controls)
 	{
-		//Update InAir State
+		//Set Roatation
+		CharacterNode->SetRotation(Quaternion(controls->yaw_, Vector3::UP));
 
 		Vector3 moveDir = Vector3::ZERO;
 		Quaternion rot = CharacterNode->GetRotation();
@@ -45,9 +46,6 @@ public:
 		Vector3 LineVelocity = CharacterBody->GetLinearVelocity();
 		Vector3 PlaneVelocity = Vector3(LineVelocity.x_, 0.0f, LineVelocity.z_);
 		CharacterBody->ApplyImpulse(-PlaneVelocity*GROUND_FORCE);
-
-		//Set Roatation
-		CharacterNode->SetRotation(Quaternion(controls->yaw_, Vector3::UP));
 
 		//Get controls
 		if (controls->IsDown(CTRL_FORWARD))
@@ -93,7 +91,6 @@ public:
 		else
 			AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Idle0.ani", 0, true, 0.2f);
 
-
 	}
 
 
@@ -106,12 +103,10 @@ private:
 	AnimatedModel* CharacterObject;
 	AnimationController* AnimCtrl;
 
-
 	void CreateCharacter()
 	{
 		//Create Character Node
 		CharacterNode = scene_->CreateChild("Bill");
-
 		//Adjust to normal state
 		auto* AdjustNode = CharacterNode->CreateChild("Adjust");
 		AdjustNode->SetRotation(Quaternion(0.0f, 180.0f, 0.0f));
