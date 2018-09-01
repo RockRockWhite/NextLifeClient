@@ -30,7 +30,7 @@ public:
 	{
 		
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.8.31";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.9.01";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}

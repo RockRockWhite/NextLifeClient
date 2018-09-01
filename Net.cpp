@@ -16,8 +16,9 @@ Net::~Net()
 {
 }
 
-error_code Net::connect(string url)
+void Net::connect(string url)
 {
 	error_code ec;
 	connection_=client_.get_connection(url, ec);
+
 }

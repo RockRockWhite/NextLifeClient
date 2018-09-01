@@ -9,6 +9,7 @@ class Net
 public:
 	Net();
 	~Net();
+	void  connect(string url);
 private:
 
 };
