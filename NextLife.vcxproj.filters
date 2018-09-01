@@ -7,6 +7,9 @@
     <ClCompile Include="Controls_Def.h">
       <Filter>Head Files</Filter>
     </ClCompile>
+    <ClCompile Include="Net.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Projects\NextLifeClient\CMakeLists.txt" />
@@ -38,6 +41,9 @@
       <Filter>Head Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
+      <Filter>Head Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Net.h">
       <Filter>Head Files</Filter>
     </ClInclude>
   </ItemGroup>

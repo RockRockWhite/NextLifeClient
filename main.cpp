@@ -1,5 +1,7 @@
 //The project is a 3D game.
 //EMMMMMM...
+//#include <WebSocketPP/config/asio_no_tls_client.hpp>
+//#include <WebSocketPP/client.hpp>
 
 #include <Urho3D/Engine/Engine.h>
 #include <Urho3D/Engine/Application.h>
@@ -13,6 +15,7 @@
 #include "Character.h"
 #include "Scene.h"
 #include "GUI.h"
+#include "Net.h"
 
 using namespace Urho3D;
 
@@ -37,6 +40,8 @@ public:
 		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
 		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
 		controls_ = new Controls();
+		Net n;
+
 		ui_ = new GUI(context_,engine_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
 
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, OnKeyDown));

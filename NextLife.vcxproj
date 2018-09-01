@@ -35,7 +35,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -68,7 +68,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Urho3D\include;D:\Urho3D\include\Urho3D\ThirdParty;D:\Urho3D\include\Urho3D\ThirdParty\Bullet;D:\Urho3D\include\Urho3D\ThirdParty\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\boost;D:\WebSocketPP\examples\echo_client;D:\WebSocketPP;D:\WebSocketPP\websocketpp;D:\Urho3D\include;D:\Urho3D\include\Urho3D\ThirdParty;D:\Urho3D\include\Urho3D\ThirdParty\Bullet;D:\Urho3D\include\Urho3D\ThirdParty\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -137,7 +137,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Urho3D\include;D:\Urho3D\include\Urho3D\ThirdParty;D:\Urho3D\include\Urho3D\ThirdParty\Bullet;D:\Urho3D\include\Urho3D\ThirdParty\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\boost;D:\WebSocketPP\examples\echo_client;D:\WebSocketPP;D:\WebSocketPP\websocketpp;D:\Urho3D\include;D:\Urho3D\include\Urho3D\ThirdParty;D:\Urho3D\include\Urho3D\ThirdParty\Bullet;D:\Urho3D\include\Urho3D\ThirdParty\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -206,7 +206,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Urho3D\include;D:\Urho3D\include\Urho3D\ThirdParty;D:\Urho3D\include\Urho3D\ThirdParty\Bullet;D:\Urho3D\include\Urho3D\ThirdParty\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\boost;D:\WebSocketPP\examples\echo_client;D:\WebSocketPP;D:\WebSocketPP\websocketpp;D:\Urho3D\include;D:\Urho3D\include\Urho3D\ThirdParty;D:\Urho3D\include\Urho3D\ThirdParty\Bullet;D:\Urho3D\include\Urho3D\ThirdParty\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -219,7 +219,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;URHO3D_ANGELSCRIPT;URHO3D_DATABASE;URHO3D_IK;URHO3D_LOGGING;URHO3D_LUA;URHO3D_MINIDUMPS;URHO3D_NAVIGATION;URHO3D_NETWORK;URHO3D_PHYSICS;URHO3D_PROFILING;URHO3D_THREADING;URHO3D_URHO2D;URHO3D_WEBP;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_WEBSOCKETPP_CPP11_FUNCTIONAL_;_WEBSOCKETPP_CPP11_SYSTEM_ERROR_;_WEBSOCKETPP_CPP11_RANDOM_DEVICE_;_WEBSOCKETPP_CPP11_MEMORY_;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;_MBCS;URHO3D_ANGELSCRIPT;URHO3D_DATABASE;URHO3D_IK;URHO3D_LOGGING;URHO3D_LUA;URHO3D_MINIDUMPS;URHO3D_NAVIGATION;URHO3D_NETWORK;URHO3D_PHYSICS;URHO3D_PROFILING;URHO3D_THREADING;URHO3D_URHO2D;URHO3D_WEBP;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
@@ -257,8 +257,8 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>D:\Urho3D\lib\Urho3D.lib;user32.lib;gdi32.lib;winmm.lib;imm32.lib;ole32.lib;oleaut32.lib;version.lib;uuid.lib;ws2_32.lib;iphlpapi.lib;winmm.lib;dbghelp.lib;d3dcompiler.lib;d3d11.lib;dxgi.lib;dxguid.lib;imm32.lib;ole32.lib;oleaut32.lib;version.lib;uuid.lib;ws2_32.lib;iphlpapi.lib;dbghelp.lib;d3dcompiler.lib;d3d11.lib;dxgi.lib;dxguid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>D:\boost\stage\lib\libboost_system-vc140-mt-gd-x64-1_68.lib;D:\boost\stage\lib\libboost_thread-vc140-mt-gd-x64-1_68.lib;D:\boost\stage\lib\libboost_random-vc140-mt-gd-x64-1_68.lib;D:\boost\stage\lib\libboost_chrono-vc140-mt-gd-x64-1_68.lib;D:\boost\stage\lib\libboost_date_time-vc140-mt-gd-x64-1_68.lib;D:\boost\stage\lib\libboost_atomic-vc140-mt-gd-x64-1_68.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;D:\Urho3D\lib\Urho3D.lib;winmm.lib;imm32.lib;version.lib;ws2_32.lib;iphlpapi.lib;dbghelp.lib;d3dcompiler.lib;d3d11.lib;dxgi.lib;dxguid.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\boost;D:\WebSocketPP\examples\echo_client;D:\WebSocketPP;D:\WebSocketPP\websocketpp;D:/boost/stage/lib;D:/boost/stage/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -316,6 +316,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="Controls_Def.h" />
     <ClCompile Include="D:\Projects\NextLifeClient\main.cpp" />
+    <ClCompile Include="Net.cpp" />
     <None Include="D:\Projects\NextLifeClient\bin\CoreData" />
     <None Include="D:\Projects\NextLifeClient\bin\Data" />
   </ItemGroup>
@@ -328,6 +329,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="Character.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="Net.h" />
     <ClInclude Include="Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
