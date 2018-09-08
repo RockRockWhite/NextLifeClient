@@ -40,8 +40,10 @@ public:
 		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
 		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
 		controls_ = new Controls();
-		Net n;
 
+		n.connect("ws://localhost:9002");
+
+		
 		ui_ = new GUI(context_,engine_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
 
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, OnKeyDown));
@@ -65,6 +67,7 @@ private:
 	Character* character_;
 	Controls* controls_;
 	GUI* ui_;
+	Net n;
 
 	void Update(StringHash type, VariantMap& data)
 	{
