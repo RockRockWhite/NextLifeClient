@@ -30,7 +30,7 @@ public:
 	{
 		
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.9.01";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.9.08";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}
@@ -40,11 +40,10 @@ public:
 		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
 		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
 		controls_ = new Controls();
-
-		n.connect("ws://localhost:9002");
-
-		
 		ui_ = new GUI(context_,engine_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
+		net_ = new Net();
+		net_->connect("ws://localhost:9002");
+
 
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, OnKeyDown));
 		SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(NextLife, Update));
@@ -61,13 +60,15 @@ public:
 		controls_ = 0;
 		delete ui_;
 		ui_ = 0;
+		delete net_;
+		net_ = 0;
 	}
 private:
 	scene* scene_;
 	Character* character_;
 	Controls* controls_;
 	GUI* ui_;
-	Net n;
+	Net* net_;
 
 	void Update(StringHash type, VariantMap& data)
 	{

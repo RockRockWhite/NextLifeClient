@@ -91,7 +91,7 @@ public:
 		TestText
 		***********************************************************************/
 		auto* TestText = root_->CreateChild<Text>("TestText");
-		TestText->SetText("NextLife Client Base V1.0.9.01");
+		TestText->SetText("NextLife Client Base V1.0.9.08");
 		TestText->SetStyleAuto();
 		TestText->SetAlignment(HA_LEFT, VA_BOTTOM);
 		TestText->SetPosition(5, 0);

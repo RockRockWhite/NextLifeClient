@@ -12,8 +12,8 @@ class Net
 public:
 	Net();
 	~Net();
-	error_code  connect(string url);
-
+	error_code connect(string url);
+	error_code send(string message);
 private:
 	shared_ptr<thread> RunThread;
 };
