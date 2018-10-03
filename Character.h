@@ -1,5 +1,8 @@
 #pragma once
 #include <Urho3D/Scene/Scene.h>
+#include <Urho3D/UI/UI.h>
+#include <Urho3D/UI/UIElement.h>
+#include <Urho3D/UI/Text.h>
 #include <Urho3D/Graphics/AnimatedModel.h>
 #include <Urho3D/Graphics/Model.h>
 #include <Urho3D/Graphics/Material.h>
@@ -24,12 +27,13 @@ const float LAY_DISTANCE = 5.0f;
 class Character
 {
 public:
-	Character(Context* context, SharedPtr <Scene> scene, SharedPtr <Node> camera,ResourceCache* cache)
+	Character(Context* context, SharedPtr <Scene> scene, SharedPtr <Node> camera, UIElement* UIRoot,ResourceCache* cache)
 	{
 		context_ = context;
 		scene_ = scene;
 		cache_= cache;
 		camera_ = camera;
+		root_ = UIRoot;
 		CreateCharacter();
 	}
 	void Update(float timeStep, Controls* controls)
@@ -91,6 +95,34 @@ public:
 		else
 			AnimCtrl->PlayExclusive("Models/Mutant/Mutant_Idle0.ani", 0, true, 0.2f);
 
+		/***********************************************************************
+		PickUpdate
+		***********************************************************************/
+		PhysicsRaycastResult PickResult;
+		//scene_->GetComponent<PhysicsWorld>()->RaycastSingle(PickResult, Ray(camera_->GetPosition(), camera_->GetRotation()*Vector3::ONE),100,4);
+		
+
+		scene_->GetComponent<PhysicsWorld>()->SphereCast(PickResult, Ray(CharacterNode->GetPosition(), CharacterNode->GetRotation()*Vector3(1,0,1)),2,2,4);
+		
+		auto* PickText = root_->GetChildStaticCast<Text>("PickText", true);
+		if (PickResult.body_)
+		{
+			//GetPickNode
+			auto* PickNode = PickResult.body_->GetNode();
+			PickText->SetVisible(true);
+			PickText->SetText("Press F to pick the " + PickNode->GetName());
+
+			//Remove Node
+			if (controls->IsDown(CTRL_PICK))
+			{
+				PickNode->Remove();
+			}
+		}
+		else
+		{
+			PickText->SetVisible(false);
+		}
+
 	}
 
 
@@ -102,6 +134,7 @@ private:
 	SharedPtr<Node> CharacterNode;
 	AnimatedModel* CharacterObject;
 	AnimationController* AnimCtrl;
+	UIElement* root_;
 
 	void CreateCharacter()
 	{
@@ -125,7 +158,7 @@ private:
 		//Init physics;
 		auto* CharacterBody=CharacterNode->CreateComponent<RigidBody>();
 		CharacterBody->SetMass(50.0f);
-		CharacterBody->SetPosition(Vector3(0, 20, 0));
+		CharacterBody->SetPosition(Vector3(0, 100, 0));
 
 		CharacterBody->SetAngularFactor(Vector3::ZERO);
 		auto* CharacterShape=CharacterNode->CreateComponent<CollisionShape>();

@@ -13,22 +13,26 @@
 #include <Urho3D/Graphics/AnimatedModel.h>
 #include <Urho3D/Graphics/AnimationState.h>
 #include <Urho3D/Graphics/Zone.h>
+#include <Urho3D/Graphics/DebugRenderer.h>
 #include <Urho3D/Physics/CollisionShape.h>
 #include <Urho3D/Physics/RigidBody.h>
 #include <Urho3D/Physics/PhysicsWorld.h>
 #include <Urho3D/Resource/ResourceCache.h>
+#include <Urho3D/IO/File.h>
+#include <Urho3D/IO/FileSystem.h>
+
 
 using namespace Urho3D;
 class scene
 {
 public:
-	scene(Context* context, ResourceCache* cache, Renderer* render)
+	scene(Context* context, ResourceCache* cache, Renderer* render, FileSystem* filesystem)
 	{
 		//Free
 		context_ = context;
 		cache_ = cache;
 		render_ = render;
-
+		filesystem_ = filesystem;
 		CreateScene();
 		SetupViewport();
 	}
@@ -79,7 +83,10 @@ private:
 		//Create Octree
 		scene_->CreateComponent<Octree>();
 		scene_->CreateComponent<PhysicsWorld>();
+		scene_->CreateComponent<DebugRenderer>();
 
+		File loadFile(context_, filesystem_->GetProgramDir() + "Data/Scenes/Moutain.xml", FILE_READ);
+		scene_->LoadXML(loadFile);
 		//Create Zone
 		ZoneNode = scene_->CreateChild("Zone");
 		zone = ZoneNode->CreateComponent<Zone>();
@@ -129,6 +136,8 @@ private:
 			ModelObject->SetMaterial(cache_->GetResource<Material>("Models/Kachujin/Materials/Kachujin.xml"));
 			//Shadows
 			ModelObject->SetCastShadows(true);
+
+			
 			AnimationState* WalkAState = ModelObject->AddAnimationState(cache_->GetResource<Animation>("Models/Kachujin/Kachujin_Walk.ani"));
 			if (WalkAState)
 			{
@@ -139,7 +148,7 @@ private:
 		}
 
 		//Create Boxs;
-		for (int i = 0; i <2000; i++)
+		for (int i = 0; i <1000; i++)
 		{
 			auto* BoxNode = scene_->CreateChild("Box");
 			SharedPtr<StaticModel> BoxObject;
@@ -156,8 +165,37 @@ private:
 			BoxRigidBody->SetCollisionEventMode(COLLISION_NEVER);
 			auto* BoxCollisionShape = BoxNode->CreateComponent<CollisionShape>();
 			BoxCollisionShape->SetBox(Vector3::ONE);
-
 		}
+
+		/***********************************************************************
+		CreateResources
+		***********************************************************************/
+		const int NUM_MUSHROOMS = 2000;
+
+		//Create mushrooms
+		
+		for(int i = 0; i < NUM_MUSHROOMS; i++)
+		{
+			SharedPtr<Node> MushroomNode;
+			MushroomNode=scene_->CreateChild("mushroom");
+			MushroomNode->SetPosition(Vector3(Random(250.0f) -250.0f, 0.0f, Random(250.0f) - 250.0f));
+			MushroomNode->SetScale(Random(0.2f,0.8f));
+			MushroomNode->SetRotation(Quaternion(0.0f, Random(360.0f), 0.0f));
+			SharedPtr<StaticModel> MushroomObject;
+			MushroomObject = MushroomNode->CreateComponent<StaticModel>();
+			MushroomObject->SetModel(cache_->GetResource<Model>("Models/Mushroom.mdl"));
+			MushroomObject->SetMaterial(cache_->GetResource<Material>("Materials/Mushroom.xml"));
+			MushroomObject->SetCastShadows(true);
+			
+			RigidBody* MushroomRigidBody = MushroomNode->CreateComponent<RigidBody>();
+			MushroomRigidBody->SetCollisionLayer(4);
+
+			CollisionShape* MushroomCollisionShape = MushroomNode->CreateComponent<CollisionShape>();
+			MushroomCollisionShape->SetTriangleMesh(MushroomObject->GetModel(), 0);
+			
+		}
+
+
 
 	}
 	void SetupViewport()
@@ -169,6 +207,7 @@ private:
 	Context* context_;
 	ResourceCache* cache_;
 	Renderer* render_;
+	FileSystem* filesystem_;
 	SharedPtr <Scene> scene_;
 	SharedPtr <Node> ZoneNode;
 	SharedPtr <Node> SkyNode;

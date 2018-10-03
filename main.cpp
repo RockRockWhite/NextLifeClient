@@ -1,7 +1,5 @@
 //The project is a 3D game.
 //EMMMMMM...
-//#include <WebSocketPP/config/asio_no_tls_client.hpp>
-//#include <WebSocketPP/client.hpp>
 
 #include <Urho3D/Engine/Engine.h>
 #include <Urho3D/Engine/Application.h>
@@ -30,24 +28,24 @@ public:
 	{
 		
 		engineParameters_[EP_FULL_SCREEN] = false;
-		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.9.08";
+		engineParameters_[EP_WINDOW_TITLE] = "NextLife Base V1.0.10.03";
 		engineParameters_[EP_WINDOW_WIDTH] = 1280;
 		engineParameters_[EP_WINDOW_HEIGHT] = 720;
 	}
 	virtual void Start()
 	{
 		//Initialize scene.
-		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>());
-		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<ResourceCache>());
+		scene_ = new scene(context_, GetSubsystem<ResourceCache>(), GetSubsystem<Renderer>(),GetSubsystem<FileSystem>());
+		character_ = new Character(context_, scene_->GetScene(), scene_->GetCameraNode() , GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
 		controls_ = new Controls();
 		ui_ = new GUI(context_,engine_, GetSubsystem<UI>()->GetRoot(),GetSubsystem<ResourceCache>());
 		net_ = new Net();
 		net_->connect("ws://localhost:9002");
 
-
 		SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(NextLife, OnKeyDown));
 		SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(NextLife, Update));
 		SubscribeToEvent(E_UIMOUSECLICK, URHO3D_HANDLER(NextLife, OnUIClicked));
+		SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(NextLife, PostRenderUpdate));
 	}
 	virtual void Stop()
 	{
@@ -77,7 +75,7 @@ private:
 		float timeStep = data[P_TIMESTEP].GetFloat();
 
 		//Clear
-		controls_->Set(CTRL_FORWARD | CTRL_BACK | CTRL_LEFT | CTRL_RIGHT | CTRL_JUMP,false);
+		controls_->Set(CTRL_FORWARD | CTRL_BACK | CTRL_LEFT | CTRL_RIGHT | CTRL_JUMP | CTRL_PICK,false);
 
 		//Get controls
 		Input* input=GetSubsystem<Input>();
@@ -87,13 +85,13 @@ private:
 		controls_->Set(CTRL_LEFT, input->GetKeyDown(KEY_A));
 		controls_->Set(CTRL_RIGHT, input->GetKeyDown(KEY_D));
 		controls_->Set(CTRL_JUMP, input->GetKeyDown(KEY_SPACE));
+		controls_->Set(CTRL_PICK, input->GetKeyPress(KEY_F));
 
 		controls_->yaw_ += input->GetMouseMoveX()*MOUSE_SENSITIVITY;
 		controls_->pitch_ += input->GetMouseMoveY()*MOUSE_SENSITIVITY;
 
 		character_->Update(timeStep, controls_);
 		scene_->Update(timeStep);
-
 	}
 
 	void OnKeyDown(StringHash type, VariantMap &data)
@@ -105,6 +103,14 @@ private:
 			ui_->SetMenuVisible(!ui_->GetMenuVisible());
 			GetSubsystem<Input>()->SetMouseVisible(ui_->GetMenuVisible());
 		}
+
+		if (data[P_KEY].GetInt() == KEY_TAB)//Exit when the key ESC down;
+		{
+			ui_->SetBagVisible(!ui_->GetBagVisible());
+			GetSubsystem<Input>()->SetMouseVisible(ui_->GetBagVisible());
+		}
+
+
 	}
 
 	void OnUIClicked(StringHash type, VariantMap& data)
@@ -116,6 +122,11 @@ private:
 			String name = clicked->GetName();
 			ui_->OnClicked(name);
 		}
+	}
+
+	void PostRenderUpdate(StringHash type, VariantMap& data)
+	{
+	//	GetSubsystem<Renderer>()->DrawDebugGeometry(false);
 	}
 
 };

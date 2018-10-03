@@ -24,6 +24,7 @@ public:
 		CreateLoginWindow();
 		CreateMainUI();
 		CreateMenu();
+		CreateBagWindow();
 	}
 
 	void OnClicked(String name)
@@ -32,22 +33,56 @@ public:
 		{
 			MenuWindow->SetVisible(false);
 			engine_->GetSubsystem<Input>()->SetMouseVisible(false);
-		
 		}
-			
+		if (name == "BagWindowCloseButton")
+		{
+			BagWindow->SetVisible(false);
+			engine_->GetSubsystem<Input>()->SetMouseVisible(false);
+		}
 		if (name == "ExitButton")
 			engine_->Exit();
+	}
+	void CreateBagWindow()
+	{
+		BagWindow = root_->CreateChild<Window>("BagWindow");
+		BagWindow->SetSize(800, 600);
+		BagWindow->SetStyleAuto();
+		BagWindow->SetAlignment(HA_CENTER, VA_CENTER);
+		BagWindow->SetVisible(false);
+
+		auto* BagWindowTitle = BagWindow->CreateChild<Text>("BagWindowTitle");
+		BagWindowTitle->SetText("Bag");
+		BagWindowTitle->SetStyleAuto();
+		BagWindowTitle->SetFontSize(20);
+		BagWindowTitle->SetPosition(30, 5);
+
+		for (int column = 0; column < 8; column++)//ColumnÐÐ
+		{
+			for (int row = 0; row < 10; row++)
+			{
+				auto* ResourceButton = BagWindow->CreateChild<Button>("ResourceButton "+(String)column+" "+(String)row);
+				ResourceButton->SetStyleAuto();
+				ResourceButton->SetSize(60, 60);
+				ResourceButton->SetPosition(30+75 * row, 40+70 * column);
+			}
+		}
+
+		auto* BagWindowCloseButton = BagWindow->CreateChild<Button>("BagWindowCloseButton");
+		BagWindowCloseButton->SetStyle("CloseButton");
+		BagWindowCloseButton->SetAlignment(HA_RIGHT,VA_CUSTOM);
+		BagWindowCloseButton->SetPosition(-20,10);
 	}
 	void CreateLoginWindow()
 	{
 	
-		engine_->GetSubsystem<Input>()->SetMouseVisible(true);
+		//engine_->GetSubsystem<Input>()->SetMouseVisible(true);
 		
 		//LoginWindow
 		auto* LoginWindow = root_->CreateChild<Window>("LoginWindow");
 		LoginWindow->SetSize(350, 200);
 		LoginWindow->SetStyleAuto();
 		LoginWindow->SetAlignment(HA_CENTER, VA_CENTER);
+		LoginWindow->SetVisible(false);
 
 		//LoginWindowText
 		auto* LoginWindowText = LoginWindow->CreateChild<Text>("LoginWindowText");
@@ -91,7 +126,7 @@ public:
 		TestText
 		***********************************************************************/
 		auto* TestText = root_->CreateChild<Text>("TestText");
-		TestText->SetText("NextLife Client Base V1.0.9.08");
+		TestText->SetText("NextLife Client Base V1.0.10.03");
 		TestText->SetStyleAuto();
 		TestText->SetAlignment(HA_LEFT, VA_BOTTOM);
 		TestText->SetPosition(5, 0);
@@ -179,6 +214,16 @@ public:
 		TimeText->SetStyleAuto();
 		TimeText->SetAlignment(HA_CENTER, VA_BOTTOM);
 
+		/***********************************************************************
+		PickText
+		***********************************************************************/
+		auto* PickText = root_->CreateChild<Text>("PickText");
+		PickText->SetStyleAuto();
+		PickText->SetText("Press F to pick");
+		PickText->SetAlignment(HA_CENTER, VA_CENTER);
+		PickText->SetPosition(150,0);
+		PickText->SetColor(Color(0.0f, 1.0f, 0.0f, 1.0f));
+		PickText->SetVisible(false);
 	}
 
 
@@ -265,6 +310,16 @@ public:
 		return MenuWindow->IsVisible();
 	};
 
+	void SetBagVisible(bool Visible)
+	{
+		BagWindow->SetVisible(Visible);
+	}
+	bool GetBagVisible()
+	{
+		return BagWindow->IsVisible();
+	};
+
+
 private:
 	SharedPtr<Engine> engine_;
 	Context* context_;
@@ -273,5 +328,6 @@ private:
 
 	SharedPtr<Window> MenuWindow;
 	SharedPtr<Window> StateWindow;
+	SharedPtr<Window> BagWindow;
 };
 
